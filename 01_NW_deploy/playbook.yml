@@ -1,0 +1,18 @@
+---
+- hosts: all
+  gather_facts: no
+  connection: network_cli
+
+
+  roles:
+    - 00_common
+    - 01_vlan
+    - 02_siv
+    - 03_lag
+    - 04_port_vlan
+    - { role: 05_port_ip, when: "inventory_hostname not in groups[ 'Grp_L2SW' ]" }
+    - { role: 06_static_route, when: "inventory_hostname not in groups[ 'Grp_L2SW' ]" }
+    - { role: 07_acl, when: "inventory_hostname in groups[ 'Grp_RT' ]" }
+    - { role: 08_nat, when: "inventory_hostname in groups[ 'Grp_RT' ]" }
+
+

@@ -1,0 +1,63 @@
+- name: LAG_設定
+  ios_linkagg: 
+    group: "{{ item.value.channel_id }}"
+    state: "{{ item.value.state }}"
+  with_dict: "{{ port_channel }}"
+  when: port_channel is defined
+
+- name: LAG_member_設定
+  ios_config:
+    lines:
+      - channel-group {{ item.value.channel_id }} mode {{ item.value.channel_mode }}
+    parents: "{{ item.value.name }}"
+  with_dict: "{{ interfaces }}"
+  when: item.value.channel_id is defined
+
+
+#変更時使用
+#- name: 不要member_port削除
+#  ios_config:
+#    lines:
+#      - no channel-group
+#    parents: "{{ item.value.name }}"
+#  with_dict: "{{ interfaces }}"
+#  when: item.value.channel_id is not defined
+
+
+- name: LAG_trunkport設定
+  ios_l2_interface:
+    name: "{{ item.value.name }}"
+    mode: "{{ item.value.switchport_mode }}"
+    trunk_allowed_vlans: "{{ item.value.switchport_vlan }}"
+  with_dict: "{{ port_channel }}"
+  when:
+    - port_channel is defined
+    - item.value.switchport_mode is defined
+    - item.value.switchport_mode == "trunk"
+
+
+- name: LAG_accessport設定
+  ios_l2_interface:
+    name: "{{ item.value.name }}"
+    mode: "{{ item.value.switchport_mode }}"
+    access_vlan: "{{ item.value.switchport_vlan }}"
+  with_dict: "{{ port_channel }}"
+  when:
+    - port_channel is defined
+    - item.value.switchport_mode is defined
+    - item.value.switchport_mode == "access"
+
+
+
+- name: LAG_enable/disable設定
+  ios_config:
+    lines: >-
+      {%- if item.value.state == 'present' -%} no shutdown
+      {%- else -%}                             shutdown
+      {%- endif -%}
+    parents: "interface {{ item.value.name }}"
+  with_dict: "{{ port_channel }}"
+  when:
+    - port_channel is defined
+
+

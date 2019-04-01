@@ -1,0 +1,7 @@
+
+- name: static_route設定
+  ios_static_route:
+    prefix: "{{ item.value.prefix }}"
+    mask: "{{ item.value.mask }}"
+    next_hop: "{{ item.value.next_hop }}"
+  with_dict: "{{ static_route }}"

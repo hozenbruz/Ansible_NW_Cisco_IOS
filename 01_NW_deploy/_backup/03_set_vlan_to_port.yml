@@ -1,0 +1,43 @@
+---
+
+- hosts: Grp_L2SW
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+  - name: trunk_port設定
+    ios_l2_interface:
+      aggregate:
+        - {name: "Port-channel{{ ChannelNo }}", mode: trunk, trunk_allowed_vlans: "{{ add_vlan_id }}"}
+
+  - name: port開放
+    ios_config:
+      lines: 
+        - no shutdown
+      parents: "{{ item }}"
+    with_items:
+       - "interface Port-channel{{ ChannelNo }}"
+       - "interface {{ port_1 }}"
+       - "interface {{ port_2 }}"
+
+
+
+- hosts: Grp_L3SW
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+  - name: trunk_port設定
+    ios_l2_interface:
+      aggregate:
+        - {name: "Port-channel{{ ChannelNo }}", mode: trunk, trunk_allowed_vlans: "{{ add_vlan_id }}"}
+
+  - name: port開放
+    ios_config:
+      lines:
+        - no shutdown
+      parents: "{{ item }}"
+    with_items:
+       - "interface Port-channel{{ ChannelNo }}"
+       - "interface {{ port_1 }}"
+       - "interface {{ port_2 }}"

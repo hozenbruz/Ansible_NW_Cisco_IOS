@@ -1,0 +1,50 @@
+
+- name: SW_trunkport設定
+  ios_l2_interface:
+    name: "{{ item.key }}"
+    mode: "{{ item.value.switchport_mode }}"
+    trunk_allowed_vlans: "{{ item.value.switchport_vlan }}"
+  with_dict: "{{ interfaces }}"
+  when:
+    - inventory_hostname in groups[ 'Cisco_SW' ]
+    - item.value.channel_id is not defined
+    - item.value.switchport_mode is defined
+    - item.value.switchport_mode == "trunk"
+
+
+- name: SW_accessport設定
+  ios_l2_interface:
+    name: "{{ item.key }}"
+    mode: "{{ item.value.switchport_mode }}"
+    access_vlan: "{{ item.value.switchport_vlan }}"
+  with_dict: "{{ interfaces }}"
+  when:
+    - inventory_hostname in groups[ 'Cisco_SW' ]
+    - item.value.channel_id is not defined
+    - item.value.switchport_mode is defined
+    - item.value.switchport_mode == "access"
+
+
+- name: SW_accessport_portfast設定
+  ios_config:
+    lines: spanning-tree portfast
+    parents: "{{ item.value.name }}"
+  with_dict: "{{ interfaces }}"
+  when:
+    - inventory_hostname in groups[ 'Cisco_SW' ]
+    - item.value.channel_id is not defined
+    - item.value.switchport_mode is defined
+    - item.value.switchport_mode == "access"
+
+
+- name: RT_accessport設定
+  ios_config:
+    lines:
+      - switchport access vlan {{ item.value.switchport_vlan }}
+      - spanning-tree portfast
+    parents: "{{ item.value.name }}"
+  with_dict: "{{ interfaces }}"
+  when:
+    - inventory_hostname in groups[ 'Grp_RT' ]
+    - item.value.switchport_mode is defined
+    - item.value.switchport_mode == "access"

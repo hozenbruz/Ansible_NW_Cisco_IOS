@@ -1,0 +1,18 @@
+
+[Grp_L2SW]
+L2SW ansible_host=192.168.100.250
+
+
+[Grp_L3SW]
+L3SW ansible_host=192.168.100.251
+
+
+[Cisco_SW:children]
+Grp_L2SW
+Grp_L3SW
+
+
+[Grp_RT]
+RT ansible_host=192.168.100.252
+
+

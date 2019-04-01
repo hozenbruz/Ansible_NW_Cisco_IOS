@@ -1,0 +1,15 @@
+- name: ACL設定
+  ios_config: 
+    lines:
+      - access-list {{ item.list_num }} {{ item.action }} {{ item.protocol | default([]) }} {{ item.source_add | default([]) }} {{ item.source_wildcard | default([]) }} {{ item.source_port | default([]) }} {{ item.dest_add | default([]) }} {{ item.dest_wildcard | default([]) }} {{ item.dest_port | default([]) }}
+  with_items:  "{{ acl }}"
+
+
+- name: ACL_インターフェース適用
+  ios_config:
+    lines:
+      - ip access-group {{ item.value.listnum }} {{ item.value.direction }}
+    parents: "{{ item.value.name }}"
+  with_dict:  "{{ interfaces }}"
+  when: item.value.listnum is defined
+

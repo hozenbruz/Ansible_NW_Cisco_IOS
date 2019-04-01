@@ -1,0 +1,29 @@
+
+- name: L3SW_routedport設定
+  ios_config:
+    lines: no switchport
+    parents: "{{ item.value.name }}"
+  with_dict: "{{ interfaces }}"
+  when: 
+    - inventory_hostname in groups['Grp_L3SW']
+    - item.value.ipv4 is defined
+
+
+- name: L3SW_routedport設定
+  ios_vrf:
+    name: "{{ item.value.name }}"
+    interfaces: "{{ item.value.interface }}"
+  with_dict: "{{ vrf }}"
+  when:
+    - inventory_hostname in groups['Grp_RT']
+    - vrf is defined
+
+
+
+- name:  ポートIP設定
+  ios_l3_interface:
+    name: "{{ item.key }}"
+    ipv4: "{{ item.value.ipv4 }}/{{ item.value.subnetmask }}"
+  with_dict: "{{ interfaces }}"
+  when:
+    - item.value.ipv4 is defined
