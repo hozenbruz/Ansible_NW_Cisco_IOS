@@ -1,0 +1,149 @@
+---
+
+banner: |-
+  **********************
+       TRAINING
+         cisco
+       C891FJ-K9
+   C800-UNIVERSALK9-M
+  IOS Version 15.5(3)M6a
+  **********************
+
+
+users:
+  user001:
+    id: "cisco"
+    password: "cisco"
+
+
+vtp_mode: transparent
+
+
+add_vlan_id: "70,100"
+
+
+vlan_interfaces:
+  vlan70:
+    name: "interface Vlan70"
+    vlan_id: 70
+    ipv4: "192.168.254.254"
+    subnetmask: 24
+
+
+vrf:
+  vrf_001:
+    name: out
+    interface: FastEthernet0
+
+
+interfaces:
+  FastEthernet0:
+    name: "interface FastEthernet0"
+    status: enable
+    description: "to Gi8 VRF"
+    ipv4: "150.12.24.82"
+    subnetmask: 30 
+
+  GigabitEthernet0:
+    name: "interface GigabitEthernet0"
+    status: enable
+    description: "from L3SW"
+    switchport_mode: access
+    switchport_vlan: "70"
+
+  GigabitEthernet1:
+    {name: "interface GigabitEthernet1", status: disable}
+
+  GigabitEthernet2:
+    {name: "interface GigabitEthernet2", status: disable}
+
+  GigabitEthernet3:
+    {name: "interface GigabitEthernet3", status: disable}
+
+  GigabitEthernet4:
+    {name: "interface GigabitEthernet4", status: disable}
+
+  GigabitEthernet5:
+    {name: "interface GigabitEthernet5", status: disable}
+
+  GigabitEthernet6:
+    {name: "interface GigabitEthernet6", status: disable}
+
+  GigabitEthernet7:
+    name: "interface GigabitEthernet7"
+    status: enable
+    switchport_mode: access
+    switchport_vlan: 100
+    portfast: enable
+
+  GigabitEthernet8:
+    name: "interface GigabitEthernet8"
+    status: enable
+    description: "from Fa0 VRF"
+    ipv4: "150.12.24.81"
+    subnetmask: 30
+    listnum: 100
+    direction: in
+
+static_route:
+  route001:
+    prefix: 0.0.0.0
+    mask: 0.0.0.0
+    next_hop: 150.12.24.82
+
+  route002:
+    prefix: 192.168.0.0
+    mask: 255.255.0.0
+    next_hop: 192.168.254.1
+
+
+acl:
+  - list_num: 1
+    action: permit
+    protocol: 
+    source_add: 192.168.0.0
+    source_wildcard: 0.0.255.255
+    source_port:
+    dest_add:
+    dest_wildcard:
+    dest_port:
+
+  - list_num: 100
+    action: permit
+    protocol: tcp
+    source_add: any
+    source_wildcard:
+    source_port: "eq www"
+    dest_add: any
+    dest_wildcard:
+    dest_port:
+
+  - list_num: 100
+    action: permit
+    protocol: udp
+    source_add: any
+    source_wildcard:
+    source_port: "eq domain"
+    dest_add: any
+    dest_wildcard:
+    dest_port:
+
+  - list_num: 100
+    action: permit
+    protocol: icmp
+    source_add: any
+    source_wildcard:
+    source_port: 
+    dest_add: any
+    dest_wildcard:
+    dest_port:
+
+
+nat:
+  - name: nat001
+    source_list: 1
+    interface:  GigabitEthernet8
+    inside:  "interface Vlan70"
+    outside: "interface GigabitEthernet8"
+
+

@@ -1,0 +1,19 @@
+---
+
+- hosts: Cisco_SW 
+  gather_facts: no
+  connection: network_cli
+
+#  tasks:
+#  - name: Vlan追加/削除
+#    ios_vlan:
+#      vlan_id: <Vlan_id>
+#      name: <Vlan_name>
+#      state: present/absent
+
+
+  tasks:
+  - name: Vlan {{ add_vlan_id }} 追加
+    ios_config:
+      lines:
+        - vlan {{ add_vlan_id }} 

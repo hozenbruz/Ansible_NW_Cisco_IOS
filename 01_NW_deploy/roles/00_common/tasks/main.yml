@@ -1,0 +1,86 @@
+
+- name: banner設定
+  ios_banner:
+    banner:  motd
+    text: "{{ item }}"
+    state: present
+  with_items: "{{ banner }}"
+
+
+- name: lldp設定
+  ios_lldp:
+    state: present
+
+
+- name: vstack無効化(smart_install脆弱性対策)
+  ios_config:
+    lines: no vstack
+
+- name: ユーザー作成
+  ios_user:
+    name: "{{ item.value.id }}"
+    configured_password: "{{ item.value.password }}"
+  with_dict: "{{ users }}"
+
+
+- name: DNS_Lookup停止
+  ios_system:
+    lookup_enabled: no
+
+
+- name: vtp_mode設定
+  when: inventory_hostname in groups['Cisco_SW']
+  ios_config:
+    lines: vtp mode {{ vtp_mode }}
+
+
+- name: L3SW_ルーティング有効化
+  when: inventory_hostname in groups['Grp_L3SW']
+  ios_config:
+    lines: ip routing
+  ignore_errors: yes
+
+
+- name: L3SWルーティング有効化後の再接続待ち
+  when: inventory_hostname in groups['Grp_L3SW']
+  wait_for_connection:
+    delay: 45
+    timeout: 90
+
+
+- name: console_接続設定
+  ios_config:
+    lines:
+      - exec-timeout 0 0
+      - logging synchronous
+    parents: line con 0
+
+
+- name: interface vlan1 無効化
+  ios_config:
+    lines:
+      - no ip address
+      - no ip route-cache
+      - shutdown
+    parents: interface Vlan1
+
+
+- name: port一般設定_description
+  ios_interface:
+    name: "{{ item.key }}"
+    description: >-
+      {%- if item.value.description is defined -%} {{ item.value.description }}
+      {%- else -%}
+      {%- endif -%}
+  with_dict: "{{ interfaces }}"
+
+
+- name: port_enable/disable設定
+  ios_config:
+    lines: >-
+      {%- if item.value.status == 'enable' -%} no shutdown
+      {%- else -%}                             shutdown
+      {%- endif -%}
+    parents: "{{ item.value.name }}"
+  with_dict: "{{ interfaces }}"
+

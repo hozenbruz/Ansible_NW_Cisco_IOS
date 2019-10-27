@@ -1,0 +1,23 @@
+- name: SVI 設定
+  ios_l3_interface: 
+    name: "Vlan{{ item.value.vlan_id }}"
+    ipv4: "{{ item.value.ipv4 }}/{{ item.value.subnetmask }}"
+  with_dict: "{{ vlan_interfaces }}"
+
+- name: SVI有効化
+  ios_config:
+    lines:
+      - no shutdown
+    parents: "{{ item.value.name }}"
+  with_dict: "{{ vlan_interfaces }}"
+
+
+
+# role_00へ移動
+#- name: interface vlan1 無効化
+#  ios_config:
+#    lines: 
+#      - no ip address
+#      - no ip route-cache
+#      - shutdown
+#    parents: interface vlan1

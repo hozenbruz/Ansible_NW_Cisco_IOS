@@ -1,0 +1,5 @@
+
+- name: Vlan  追加
+  ios_config:
+    lines:
+      - vlan {{ add_vlan_id }}

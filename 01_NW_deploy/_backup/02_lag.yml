@@ -1,0 +1,28 @@
+---
+
+- hosts: Grp_L2SW
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+  - name: L2SW_LAG_port追加
+    ios_linkagg:
+      group:  "{{ ChannelNo }}"
+      mode: active
+      members:
+        - "{{ port_1 }}"
+        - "{{ port_2 }}"
+
+
+- hosts: Grp_L3SW
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+  - name: L3SW_LAG_port追加
+    ios_linkagg:
+      group:  "{{ ChannelNo }}"
+      mode: active
+      members:
+        - "{{ port_1 }}"
+        - "{{ port_2 }}"

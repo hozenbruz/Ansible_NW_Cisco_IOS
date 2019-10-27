@@ -1,0 +1,108 @@
+---
+
+users: 
+  user001: 
+    {id: cisco,  password: cisco}
+
+vtp_mode: transparent
+
+add_vlan_id: "10,20"
+
+
+vlan_interfaces: 
+  vlan10: 
+    {name: "interface Vlan1", vlan_id: 10, ipv4: "192.168.10.253", subnetmask: 24}
+
+port_channel: 
+  channel10:
+    name: "Port-channel10"
+    channel_id: 10
+    state: present
+    switchport_mode: trunk
+    switchport_vlan: "10,20"
+
+interfaces:
+
+  GigabitEthernet1/0/1:
+    {name: "interface GigabitEthernet1/0/1", status: enable, description: "from PC1",switchport_mode: access, switchport_vlan: 10, portfast: enable}
+
+  GigabitEthernet1/0/2:
+    {name: "interface GigabitEthernet1/0/2", status: enable, description: "from PC2",switchport_mode: access, switchport_vlan: 20, portfast: enable}
+
+  GigabitEthernet1/0/3:
+    {name: "interface GigabitEthernet1/0/3", status: disable}
+
+  GigabitEthernet1/0/4:
+    {name: "interface GigabitEthernet1/0/4", status: disable}
+
+  GigabitEthernet1/0/5:
+    {name: "interface GigabitEthernet1/0/5", status: disable}
+
+  GigabitEthernet1/0/6:
+    {name: "interface GigabitEthernet1/0/6", status: disable}
+
+  GigabitEthernet1/0/7:
+    {name: "interface GigabitEthernet1/0/7", status: disable}
+
+  GigabitEthernet1/0/8:
+    {name: "interface GigabitEthernet1/0/8", status: disable}
+
+  GigabitEthernet1/0/9:
+    {name: "interface GigabitEthernet1/0/9", status: disable}
+
+  GigabitEthernet1/0/10:
+    {name: "interface GigabitEthernet1/0/10", status: disable}
+
+  GigabitEthernet1/0/11:
+    {name: "interface GigabitEthernet1/0/11", status: disable}
+
+  GigabitEthernet1/0/12:
+    {name: "interface GigabitEthernet1/0/12", status: disable}
+
+  GigabitEthernet1/0/13:
+    {name: "interface GigabitEthernet1/0/13", status: disable}
+
+  GigabitEthernet1/0/14:
+    {name: "interface GigabitEthernet1/0/14", status: disable}
+
+  GigabitEthernet1/0/15:
+    {name: "interface GigabitEthernet1/0/15", status: disable}
+
+  GigabitEthernet1/0/16:
+    {name: "interface GigabitEthernet1/0/16", status: disable}
+
+  GigabitEthernet1/0/17:
+    {name: "interface GigabitEthernet1/0/17", status: disable}
+
+  GigabitEthernet1/0/18:
+    {name: "interface GigabitEthernet1/0/18", status: disable}
+
+  GigabitEthernet1/0/19:
+    {name: "interface GigabitEthernet1/0/19", status: disable}
+
+  GigabitEthernet1/0/20:
+    {name: "interface GigabitEthernet1/0/20", status: disable}
+
+  GigabitEthernet1/0/21:
+    {name: "interface GigabitEthernet1/0/21", status: disable}
+
+  GigabitEthernet1/0/22:
+    {name: "interface GigabitEthernet1/0/22", status: disable}
+
+  GigabitEthernet1/0/23: 
+    {name: "interface GigabitEthernet1/0/23", status: enable, channel_id: 10, channel_mode: "on", description: "to L3SW", switchport_mode: trunk, switchport_vlan: "10,20"}
+
+  GigabitEthernet1/0/24:
+    {name: "interface GigabitEthernet1/0/24", status: enable, channel_id: 10, channel_mode: "on", description: "to L3SW", switchport_mode: trunk, switchport_vlan: "10,20"}
+
+  GigabitEthernet1/0/25:
+    {name: "interface GigabitEthernet1/0/25", status: disable}
+
+  GigabitEthernet1/0/26:
+    {name: "interface GigabitEthernet1/0/26", status: disable}
+
+  GigabitEthernet1/0/27:
+    {name: "interface GigabitEthernet1/0/27", status: disable}
+
+  GigabitEthernet1/0/28:
+    {name: "interface GigabitEthernet1/0/28", status: disable}

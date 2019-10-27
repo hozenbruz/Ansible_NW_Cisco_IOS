@@ -1,0 +1,20 @@
+- name: NAT設定
+  ios_config:
+    lines:
+      - ip nat inside source list {{ item.source_list }} interface {{ item.interface }} overload
+  with_items: "{{ nat }}"
+
+- name: NAT_inside_interface設定
+  ios_config:
+    lines:
+      - ip nat inside 
+    parents: "{{ item.inside }}" 
+  with_items: "{{ nat }}"
+
+
+- name: NAT_outside_interface設定
+  ios_config:
+    lines:
+      - ip nat outside
+    parents: "{{ item.outside }}"
+  with_items: "{{ nat }}"
